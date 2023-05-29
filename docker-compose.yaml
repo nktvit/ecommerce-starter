@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: runner
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    tty: true
+    ports:
+      - '3000:3000'
+    volumes:
+      - './frontend:/app/frontend'
+    depends_on:
+      - backend
+    command: npm run dev
+    networks:
+      - app
+    environment:
+      NODE_ENV: development
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    ports:
+      - '8000:8000'
+    volumes:
+      - './backend:/app/backend'
+    environment:
+      APP_ENV: 'local'
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: 'ecommerce_shop'
+      DB_USERNAME: 'ecommerce'
+      DB_PASSWORD: 'ecommerce'
+
+    depends_on:
+      - db
+    networks:
+      - app
+
+  db:
+    image: mysql:5.7.22
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: 'ecommerce_shop'
+      MYSQL_USER: 'ecommerce'
+      MYSQL_PASSWORD: 'ecommerce'
+      MYSQL_ROOT_PASSWORD: 'ecommerce'
+    networks:
+      - app
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+
+networks:
+  app:
+    driver: bridge
