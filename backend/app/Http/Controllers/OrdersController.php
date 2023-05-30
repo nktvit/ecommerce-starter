@@ -2,49 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreOrdersRequest;
-use App\Http\Requests\UpdateOrdersRequest;
-use App\Models\Orders;
+use App\Services\OrdersService;
+use App\Traits\HttpResponses;
+use Illuminate\Http\JsonResponse;
 
 class OrdersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use HttpResponses;
+
+    protected OrdersService $ordersService;
+    public function __construct(OrdersService $ordersService)
     {
-        return Orders::all();
+        $this->ordersService = $ordersService;
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @return JsonResponse
      */
-    public function store(StoreOrdersRequest $request)
+    public function index(): JsonResponse
     {
-        //
+        return $this->ordersService->getAllOrders();
     }
 
     /**
-     * Display the specified resource.
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(Orders $orders)
+    public function show($id): JsonResponse
     {
-
+        return $this->ordersService->getOrder($id);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(UpdateOrdersRequest $request, Orders $orders)
+    public function destroy($id): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Orders $orders)
-    {
-        //
+        return $this->ordersService->destroy($id);
     }
 }

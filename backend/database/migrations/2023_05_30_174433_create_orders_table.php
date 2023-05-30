@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->double('total_price');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
