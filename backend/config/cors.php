@@ -1,5 +1,17 @@
 <?php
 
+$frontedUrl = env('FRONTEND_URL', '*');
+
+if ($frontedUrl !== '*') {
+    $parsed = parse_url($frontedUrl);
+    $frontedUrl = sprintf(
+        '%s://%s%s',
+        $parsed['scheme'],
+        $parsed['host'],
+        isset($parsed['port']) ? ':' . $parsed['port'] : ''
+    );
+}
+
 return [
 
     /*
@@ -19,7 +31,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => [$frontedUrl],
 
     'allowed_origins_patterns' => [],
 
