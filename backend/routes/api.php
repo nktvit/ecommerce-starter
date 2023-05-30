@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrdersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/hello', function () {
-    return response()->json(['message' => 'Hello world my app']);
+    return response()->json(['message' => 'Hello world my app 131231']);
 });
+
+Route::apiResource('orders', OrdersController::class);
