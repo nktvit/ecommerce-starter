@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +25,16 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
     Route::get('/orders', [OrdersController::class, 'index']);
     Route::get('/order/{id}', [OrdersController::class, 'show']);
     Route::post('/order/delete/{id}', [OrdersController::class, 'destroy']);
+
+    Route::get('/products', [ProductsController::class, 'index']);
+    Route::get('/product/{id}', [ProductsController::class, 'show']);
+    Route::post('/product/create', [ProductsController::class, 'store']);
+    Route::post('/product/update', [ProductsController::class, 'update']);
+    Route::post('/product/delete/{id}', [ProductsController::class, 'destroy']);
+
+    Route::get('/cart/{id}', [CartController::class, 'index']);
+    Route::post('/cart/add', [CartController::class, 'addItem']);
+    Route::post('/cart/change-item-quantity', [CartController::class, 'update']);
+    Route::post('/cart/delete-item/{id}', [CartController::class, 'deleteItem']);
+    Route::post('/cart/delete-all/{id}', [CartController::class, 'deleteAllCart']);
 });

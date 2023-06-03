@@ -8,8 +8,6 @@ use Illuminate\Http\JsonResponse;
 
 class OrdersController extends Controller
 {
-    use HttpResponses;
-
     protected OrdersService $ordersService;
     public function __construct(OrdersService $ordersService)
     {
