@@ -38,9 +38,9 @@ class ProductsController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function show($id): JsonResponse
+    public function show(string $slug): JsonResponse
     {
-        return $this->productsService->getProduct($id);
+        return $this->productsService->getProduct($slug);
     }
 
     /**
