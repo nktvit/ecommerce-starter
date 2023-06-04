@@ -1,2 +1,4 @@
 /data/
 /docker/data
+.idea
+.DS_Store
