@@ -32,9 +32,9 @@ class CartService
     {
         $request->validated();
 
-        $userId = $request->user_id;
-        $productId = $request->product_id;
-        $quantity = (int) $request->quantity;
+        $userId = $request->post('user_id');
+        $productId = $request->post('product_id');
+        $quantity = (int) $request->post('quantity');
 
         $itemOnCart = Cart::where('user_id', $userId)->where('product_id', $productId)->first();
         if (!$itemOnCart) {
@@ -56,8 +56,8 @@ class CartService
    public function update(UpdateCartRequest $request) {
         $request->validated();
 
-        $cartItemId = $request->cart_item_id;
-        $quantity = (int) $request->quantity;
+        $cartItemId = $request->post('cart_item_id');
+        $quantity = (int) $request->post('quantity');
 
         $cartItem = Cart::find($cartItemId);
         if (!$cartItem) {

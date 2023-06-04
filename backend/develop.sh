@@ -22,7 +22,7 @@ elif [ "$1" == "artisan" ]; then
 # inside a new container
 elif [ "$1" == "composer" ]; then
     shift 1
-    $COMPOSE composer "$@"
+    $COMPOSE_BACKER composer "$@"
 # If "npm" is used, run npm
 # from our node container
 elif [ "$1" == "npm" ]; then

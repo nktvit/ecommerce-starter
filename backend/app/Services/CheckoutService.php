@@ -2,119 +2,45 @@
 
 namespace App\Services;
 
-use App\Http\Requests\StoreProductsRequest;
-use App\Http\Requests\UpdateProductsRequest;
-use App\Models\Products;
+use App\Http\Requests\StoreCheckoutGuestRequest;
+use App\Http\Requests\StoreCheckoutUserRequest;
+use App\Models\User;
 use App\Traits\HttpResponses;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ProductsService
+class CheckoutService
 {
     use HttpResponses;
 
-    /**
-     * @return JsonResponse
-     */
-    public function getAllProducts(): JsonResponse
+    public function createUserOrder(StoreCheckoutUserRequest $request)
     {
-        return $this->success(Products::all());
-    }
+        $billingAddress = $request->post('billing_address');
+        $shippingAddress = $request->post('shipping_address');
+        $userId = $request->post('user_id');
 
-    /**
-     * @param $ids
-     * @return JsonResponse
-     */
-    public function getProduct($id): JsonResponse
-    {
-        $product = Products::find($id);
-        if (!$product) {
-            return $this->error([], 'Not found product', 404);
+        try {
+            $user = User::findOrError($userId);
+
+            $dbShippingAddress = $user->addresses()->where('uuid', $shippingAddress['uuid'])->first();
+            $dbBillingAddress = $user->addresses()->where('uuid', $billingAddress['uuid'])->first();
+
+            return $this->success([
+                'billing_address' => $user->getBillingAddress(),
+                'shipping_address' => $user->getBillingAddress()
+            ]);
+        } catch (NotFoundHttpException $foundHttpException) {
+            return $this->error([], $foundHttpException->getMessage(), $foundHttpException->getStatusCode());
+        } catch (\Exception $exception) {
+            return $this->error([], $exception->getMessage(), $exception->getStatusCode());
         }
-        return $this->success($product);
     }
 
-    /**
-     * @param $id
-     * @return JsonResponse
-     */
-    public function destroy($id): JsonResponse
+    public function createGuestOrder(StoreCheckoutGuestRequest $request)
     {
-        if (!Products::destroy($id)) {
-            return $this->error([], 'Not found product', 404);
-        }
+        $billingAddress = $request->billing_address;
+        $shippingAddress = $request->shipping_address;
+        $cart = $request->cart;
+        $email = $request->email;
 
-        return $this->success([
-            'product_id' => $id
-        ], 'Successful deleted product');
-    }
-
-    /**
-     * @param StoreProductsRequest $request
-     * @return JsonResponse
-     */
-    public function create(StoreProductsRequest $request): JsonResponse
-    {
-        $request->validated();
-
-        $img = $request->file('img');
-        $path = !empty($img) ?
-            $img->store('products') :
-            'products/default.png';
-
-        $payloadProduct = [
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
-            'img' => $path,
-            'price' => (float) $request->price
-        ];
-
-        $product = Products::create($payloadProduct);
-
-        return $this->success($product, 'Successful create product');
-    }
-
-    /**
-     * @param UpdateProductsRequest $request
-     * @return JsonResponse
-     */
-    public function update(UpdateProductsRequest $request): JsonResponse
-    {
-        $request->validated();
-
-        $product = Products::find($request->id);
-        if (!$product) {
-            return $this->error([], 'Not found product', 404);
-        }
-
-        $img = $request->file('img');
-        $path = $this->createNewPathForUpdate($product->img, $img);
-        $slug = !empty($request->name) ? Str::slug($request->name) : $product->slug;
-
-        $product->name = $request->name ?? $product->name;
-        $product->slug = $slug;
-        $product->description = $request->description ?? $product->description;
-        $product->img = $path;
-        $product->price = $request->price ? (float) $request->price : $product->price;
-
-        $product->save();
-
-        return $this->success($product, 'Successful update product');
-    }
-
-    public function createNewPathForUpdate(string $productImg, $img): string
-    {
-        $path = $productImg;
-        if (!empty($img)) {
-            if (Storage::exists($path)) {
-                Storage::delete($path);
-            }
-
-            $path = $img->store('products');
-        }
-
-        return $path;
     }
 }

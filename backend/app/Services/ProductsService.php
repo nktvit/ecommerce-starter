@@ -64,11 +64,11 @@ class ProductsService
             'products/default.png';
 
         $payloadProduct = [
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-            'description' => $request->description,
+            'name' => $request->post('name'),
+            'slug' => Str::slug($request->post('name')),
+            'description' => $request->post('description'),
             'img' => $path,
-            'price' => (float) $request->price
+            'price' => (float) $request->post('price')
         ];
 
         $product = Products::create($payloadProduct);
@@ -84,20 +84,20 @@ class ProductsService
     {
         $request->validated();
 
-        $product = Products::find($request->id);
+        $product = Products::find($request->post('id'));
         if (!$product) {
             return $this->error([], 'Not found product', 404);
         }
 
         $img = $request->file('img');
         $path = $this->createNewPathForUpdate($product->img, $img);
-        $slug = !empty($request->name) ? Str::slug($request->name) : $product->slug;
+        $slug = !empty($request->name) ? Str::slug($request->post('name')) : $product->slug;
 
-        $product->name = $request->name ?? $product->name;
+        $product->name = $request->post('name') ?? $product->name;
         $product->slug = $slug;
-        $product->description = $request->description ?? $product->description;
+        $product->description = $request->post('description') ?? $product->description;
         $product->img = $path;
-        $product->price = $request->price ? (float) $request->price : $product->price;
+        $product->price = $request->post('price') ? (float) $request->price : $product->price;
 
         $product->save();
 

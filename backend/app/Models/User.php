@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Lecturize\Addresses\Traits\HasAddresses;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasAddresses;
 
     /**
      * The attributes that are mass assignable.
@@ -44,9 +46,24 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
+    /**
+     * @return HasMany
+     */
     public function orders(): HasMany
     {
         return $this->hasMany(Orders::class);
+    }
+
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public static function findOrError($userId)
+    {
+        $user = self::find($userId);
+        if (!$user) {
+            throw new NotFoundHttpException('Not found user', null, 404);
+        }
+        return $user;
     }
 }
