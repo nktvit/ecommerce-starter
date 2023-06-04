@@ -64,7 +64,7 @@ class CartService
             $this->error([], 'Not found cart item', 404);
         }
 
-       $cartItem->quantity += $quantity;
+       $cartItem->quantity = $quantity;
        $cartItem->save();
 
        return $this->success($cartItem, 'Success added item to cart');
