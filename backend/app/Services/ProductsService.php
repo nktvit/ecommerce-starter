@@ -26,9 +26,9 @@ class ProductsService
      * @param $ids
      * @return JsonResponse
      */
-    public function getProduct($id): JsonResponse
+    public function getProduct(string $slug): JsonResponse
     {
-        $product = Products::find($id);
+        $product = Products::where('slug', $slug)->first();
         if (!$product) {
             return $this->error([], 'Not found product', 404);
         }

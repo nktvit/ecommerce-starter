@@ -43,10 +43,11 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
     Route::post('/user/create/billing', [UserController::class, 'createBillingAddress']);
     Route::post('/user/update/shipping', [UserController::class, 'updateShippingAddress']);
     Route::post('/user/update/billing', [UserController::class, 'updateBillingAddress']);
+
+    Route::post('/checkout/user', [CheckoutController::class, 'storeUser']);
 });
 
 Route::get('/products', [ProductsController::class, 'index']);
-Route::get('/product/{id}', [ProductsController::class, 'show']);
+Route::get('/product/{slug}', [ProductsController::class, 'show']);
 
-Route::post('/checkout/user', [CheckoutController::class, 'storeUser']);
 Route::post('/checkout/guest', [CheckoutController::class, 'storeGuest']);
