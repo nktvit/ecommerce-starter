@@ -61,7 +61,7 @@ class CartService
 
         $cartItem = Cart::find($cartItemId);
         if (!$cartItem) {
-            $this->error([], 'Not found cart item', 404);
+            return $this->error([], 'Not found cart item', 404);
         }
 
        $cartItem->quantity = $quantity;
@@ -78,7 +78,7 @@ class CartService
    {
        $cart = Cart::find($cartItemId);
        if (!$cart) {
-           $this->error([], 'Not found item on cart', 404);
+           return $this->error([], 'Not found item on cart', 404);
        }
 
        Cart::destroy($cartItemId);
@@ -92,7 +92,7 @@ class CartService
     public function deleteAll(int $userId): JsonResponse
    {
        if (!$userId) {
-           $this->error([], 'user_id parameter is required', 404);
+           return $this->error([], 'user_id parameter is required', 404);
        }
 
        $queryCart = Cart::where('user_id', $userId);
