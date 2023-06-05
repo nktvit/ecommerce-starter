@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCheckoutUserRequest extends FormRequest
+class StoreCheckoutUserRequest extends BaseRequest
 {
     public $billing_address;
     public $shipping_address;

@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 
-class StoreCheckoutGuestRequest extends FormRequest
+class StoreCheckoutGuestRequest extends BaseRequest
 {
     public $billing_address;
     public $shipping_address;

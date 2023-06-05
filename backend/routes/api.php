@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
@@ -49,5 +50,10 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
 
 Route::get('/products', [ProductsController::class, 'index']);
 Route::get('/product/{slug}', [ProductsController::class, 'show']);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/category/{id}', [CategoryController::class, 'show']);
+Route::post('/category/create', [CategoryController::class, 'store']);
+Route::post('/category/delete/{id}', [CategoryController::class, 'destroy']);
 
 Route::post('/checkout/guest', [CheckoutController::class, 'storeGuest']);

@@ -35,7 +35,7 @@ class ProductsController extends Controller
     }
 
     /**
-     * @param $id
+     * @param string $slug
      * @return JsonResponse
      */
     public function show(string $slug): JsonResponse

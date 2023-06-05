@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
+use App\Http\Resources\ProductResource;
 use App\Models\Products;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Storage;
@@ -22,17 +23,18 @@ class ProductsService
         return $this->success(Products::all());
     }
 
+
     /**
-     * @param $ids
+     * @param string $slug
      * @return JsonResponse
      */
     public function getProduct(string $slug): JsonResponse
     {
-        $product = Products::where('slug', $slug)->first();
+        $product = Products::with('categories')->where('slug', $slug)->first();
         if (!$product) {
             return $this->error([], 'Not found product', 404);
         }
-        return $this->success($product);
+        return $this->success(new ProductResource($product));
     }
 
     /**

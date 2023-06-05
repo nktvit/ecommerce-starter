@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests;
 
-class StoreCartRequest extends BaseRequest
+class UpdateCategoryRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -20,9 +20,7 @@ class StoreCartRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
-            'product_id' => 'required|integer',
-            'quantity' => 'required|integer|min:1|max:999',
+            //
         ];
     }
 }
