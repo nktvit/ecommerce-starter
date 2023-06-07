@@ -2,7 +2,7 @@ import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import AuthSessionStatus from '@/components/AuthSessionStatus'
 import Button from '@/components/Button'
-import GuestLayout from '@/components/Layouts/GuestLayout'
+import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import Input from '@/components/Input'
 import InputError from '@/components/InputError'
 import Label from '@/components/Label'
@@ -39,7 +39,7 @@ const PasswordReset = () => {
     }, [router.query.email])
 
     return (
-        <GuestLayout>
+        <DefaultLayout>
             <AuthCard
                 logo={
                     <Link href="/">
@@ -113,7 +113,7 @@ const PasswordReset = () => {
                     </div>
                 </form>
             </AuthCard>
-        </GuestLayout>
+        </DefaultLayout>
     )
 }
 
