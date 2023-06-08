@@ -1,115 +1,109 @@
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-
+import { useState } from 'react'
+import { Dialog } from '@headlessui/react'
 import ApplicationLogo from '@/components/ApplicationLogo'
 import Link from 'next/link'
 import { Navbar } from 'flowbite-react'
 import { MdOutlineShoppingCart } from 'react-icons/md'
 import { IoSearch } from 'react-icons/io5'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { BiCategory } from 'react-icons/bi'
 const GuestLayout = ({ children, header }) => {
-    function classNames(...classes) {
-        return classes.filter(Boolean).join(' ')
+    const theme = {
+        navbar: {
+            background: 'blue',
+            textColor: 'white',
+            height: '60px',
+        },
     }
 
-    function handleMouseEnter(target) {
-        target.click()
+    const [isOpen, setIsOpen] = useState(true)
+
+    function closeModal() {
+        setIsOpen(false)
+    }
+
+    function openModal() {
+        setIsOpen(true)
+    }
+
+    const SearchBar = ({ className }) => {
+        const isAppleOS = () => {
+            const platform =
+                navigator?.userAgent?.platform ||
+                navigator?.platform ||
+                'unknown'
+            return /Mac|iPod|iPhone|iPad/i.test(platform)
+        }
+
+        const keyboardShortcut = isAppleOS() ? '⌘K' : 'Ctrl+K'
+
+        return (
+            <label
+                htmlFor="searchBar"
+                className={`${className} inline-flex items-center px-3 bg-surface shadow-sm rounded-full cursor-text border border-gray-900/10 hover:border-gray-300 focus:outline-none focus:border-gray-300`}>
+                <IoSearch className="flex-none h-6 w-6 text-gray-800" />
+                <input
+                    type="text"
+                    id="searchBar"
+                    name="searchBar"
+                    placeholder="Search for anything"
+                    className="grow w-auto text-gray-500 text-sm text-left border-none bg-inherit focus:ring-0 focus:outline-none"
+                />
+                <span className="flex-none text-sm text-gray-500 font-semibold">
+                    {keyboardShortcut}
+                </span>
+            </label>
+        )
     }
 
     return (
-        <div className="min-h-screen bg-amber-100">
-            <Navbar>
-                {/*Hamburger Menu*/}
-                <Navbar.Toggle />
+        <div className="min-h-screen bg-surface">
+            <Navbar
+                theme={theme}
+                className="[&>*]:gap-x-5 bg-primary shadow-md">
+                {/*Mobile Hamburger Menu*/}
+                <Navbar.Toggle className="[&>*]:fill-white" />
                 {/*Logo*/}
-                <Navbar.Brand href="/">
-                    <ApplicationLogo className="block h-10 w-auto fill-current text-gray-600 mr-2" />
-                    <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+                <Navbar.Brand href="/" className="text-white">
+                    <ApplicationLogo className="block h-10 w-auto mr-2 fill-current" />
+                    <span className="self-center whitespace-nowrap text-xl font-semibold">
                         Laravel React
                     </span>
                 </Navbar.Brand>
-                {/*Categories dropdown*/}
-                <Menu
-                    as="div"
-                    className="relative inline-block text-left ml-6 mr-2">
-                    <Menu.Button
-                        onMouseEnter={({ target }) => handleMouseEnter(target)}
-                        // onMouseOut={({ target }) => target.click()}
-                        className="flex items-center text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-offset-gray-100">
+                {/*Categories dropdown and Search Bar*/}
+                <div className="hidden md:flex grow gap-x-4 ">
+                    <button className="px-3 py-1.5 text-lg text-white font-black bg-element border-2 border-element rounded-lg">
+                        <BiCategory className="inline-block h-6 w-6 mr-1.5" />
                         Categories
-                        <ChevronDownIcon
-                            className="ml-1 h-4 w-4"
-                            aria-hidden="true"
-                        />
-                    </Menu.Button>
-                    <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95">
-                        <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <Link
-                                            href="#"
-                                            className={classNames(
-                                                active
-                                                    ? 'bg-primary-light-bk text-gray-900'
-                                                    : 'text-gray-500',
-                                                'block px-4 py-2 text-sm',
-                                            )}>
-                                            Feature 1
-                                        </Link>
-                                    )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                    {({ active }) => (
-                                        <Link
-                                            href="#"
-                                            className={classNames(
-                                                active
-                                                    ? 'bg-primary-light-bk text-gray-900'
-                                                    : 'text-gray-500',
-                                                'block px-4 py-2 text-sm',
-                                            )}>
-                                            Feature 2
-                                        </Link>
-                                    )}
-                                </Menu.Item>
-                            </div>
-                        </Menu.Items>
-                    </Transition>
-                </Menu>
-                {/*Search Bar*/}
-                <div className="grow flex flex-row bg-gray-50 border-2 border-gray-800 rounded-3xl mx-8 px-5 py-2 text-gray-500">
-                    <IoSearch className="mr-2 h-6 w-6 " />
-                    Search for anything
+                    </button>
+                    <Dialog as="div" open={isOpen} onClose={closeModal}>
+                        <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                            <Dialog.Title>Modal Title</Dialog.Title>
+                        </Dialog.Panel>
+                    </Dialog>
+                    <SearchBar className="grow" />
                 </div>
+
                 {/*Links*/}
                 <Navbar.Collapse className="mx-3">
-                    <Navbar.Link className="list-none" href="/about">
-                        About
+                    <Navbar.Link className="list-none text-white" href="/about">
+                        <p>About</p>
                     </Navbar.Link>
                 </Navbar.Collapse>
                 {/*Search and Cart - Mobile*/}
-                <div className="flex flex-wrap mr-2 md:hidden">
+                <div className="flex gap-x-1.5 md:hidden mr-2 text-white">
                     <IoSearch className="mr-2 h-6 w-6" />
                     <Link href="/cart">
                         <MdOutlineShoppingCart className="h-6 w-6" />
                     </Link>
                 </div>
                 {/*Cart Desktop*/}
-                <MdOutlineShoppingCart className="h-6 w-6 mx-3" />
+                <MdOutlineShoppingCart className="hidden md:inline h-6 w-6 mx-3 text-white" />
                 {/*auth*/}
-                <div className="mx-3">
-                    <button className="border-2 border-amber-400 px-3 py-1 mr-2">
+                <div className="hidden mx-3 md:block text-white">
+                    <button className="px-3 py-1 mr-2 border-2 border-amber-400 rounded-lg">
                         Log In
                     </button>
-                    <button className="border-2 border-amber-400 bg-amber-400 text-white px-3 py-1">
+                    <button className="px-3 py-1 border-2 border-amber-400 bg-amber-400 rounded-lg">
                         Sign Up
                     </button>
                 </div>

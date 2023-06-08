@@ -1,7 +1,7 @@
 import ApplicationLogo from '@/components/ApplicationLogo'
 import AuthCard from '@/components/AuthCard'
 import Button from '@/components/Button'
-import GuestLayout from '@/components/Layouts/GuestLayout'
+import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
@@ -15,7 +15,7 @@ const VerifyEmail = () => {
     const [status, setStatus] = useState(null)
 
     return (
-        <GuestLayout>
+        <DefaultLayout>
             <AuthCard
                 logo={
                     <Link href="/">
@@ -50,7 +50,7 @@ const VerifyEmail = () => {
                     </button>
                 </div>
             </AuthCard>
-        </GuestLayout>
+        </DefaultLayout>
     )
 }
 
