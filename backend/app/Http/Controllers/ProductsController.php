@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
-use App\Models\Products;
 use App\Services\ProductsService;
-use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
@@ -50,6 +49,22 @@ class ProductsController extends Controller
     public function update(UpdateProductsRequest $request): JsonResponse
     {
         return $this->productsService->update($request);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function search(Request $request): JsonResponse
+    {
+        return $this->productsService->search($request);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function searchResult(Request $request): JsonResponse
+    {
+        return $this->productsService->searchResult($request);
     }
 
     /**

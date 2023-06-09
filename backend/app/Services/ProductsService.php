@@ -5,8 +5,10 @@ namespace App\Services;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Products;
 use App\Traits\HttpResponses;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
@@ -35,6 +37,42 @@ class ProductsService
             return $this->error([], 'Not found product', 404);
         }
         return $this->success(new ProductResource($product));
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+        if ($query === null) {
+            return $this->success([
+                'products' => [],
+                'categories' => []
+            ]);
+        }
+
+        $products = Products::select('name', 'slug')
+            ->where('name', 'LIKE', '%'.$query.'%')
+            ->get();
+
+        $categories = Category::select('title', 'slug')
+            ->where('title', 'LIKE', '%'.$query.'%')
+            ->get();
+
+        return $this->success([
+            'products' => $products,
+            'categories' => $categories
+        ]);
+    }
+
+    public function searchResult(Request $request)
+    {
+        $query = $request->get('query');
+        if ($query === null) {
+            return $this->success([]);
+        }
+
+        $products = Products::where('name', 'LIKE', '%'.$query.'%')->get();
+
+        return $this->success($products);
     }
 
     /**

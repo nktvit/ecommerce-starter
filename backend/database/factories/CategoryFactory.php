@@ -19,6 +19,7 @@ class CategoryFactory extends Factory
         return [
             'title' => fake()->sentence(3),
             'parent_id' => null,
+            'slug' => fake()->slug(),
         ];
     }
 }

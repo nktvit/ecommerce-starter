@@ -7,6 +7,7 @@ use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Traits\HttpResponses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 class CategoryService
 {
@@ -28,13 +29,13 @@ class CategoryService
      * @param string $slug
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(string $slug): JsonResponse
     {
-        $cateory = Category::with('products')->where('id', $id)->first();
-        if (!$cateory) {
+        $category = Category::with('products')->where('slug', $slug)->first();
+        if (!$category) {
             return $this->error([], 'Not found category', 404);
         }
-        return $this->success($cateory);
+        return $this->success($category);
     }
 
     /**
@@ -55,6 +56,7 @@ class CategoryService
 
         $category = new Category;
         $category->title = $title;
+        $category->slug = Str::slug($title);
         $category->parent_id = $parent_id;
         $category->save();
 
@@ -63,15 +65,18 @@ class CategoryService
 
 
     /**
-     * @param int $id
+     * @param string $slug
      * @return JsonResponse
      */
-    public function delete(int $id): JsonResponse
+    public function delete(string $slug): JsonResponse
     {
-        if (!Category::destroy($id)) {
+        $category = Category::where('slug', $slug)->first();
+        if (!$category) {
             return $this->error([], 'Not found category', 404);
         }
 
-        return $this->success([], 'Success delete category ID: ' . $id);
+        Category::destroy($category->id);
+
+        return $this->success([], 'Success delete category ID: ' . $category->id);
     }
 }

@@ -45,15 +45,18 @@ Route::group(['middleware' => ['auth:sanctum']], static function () {
     Route::post('/user/update/shipping', [UserController::class, 'updateShippingAddress']);
     Route::post('/user/update/billing', [UserController::class, 'updateBillingAddress']);
 
+    Route::post('/category/create', [CategoryController::class, 'store']);
+    Route::post('/category/delete/{slug}', [CategoryController::class, 'destroy']);
+
     Route::post('/checkout/user', [CheckoutController::class, 'storeUser']);
 });
 
 Route::get('/products', [ProductsController::class, 'index']);
 Route::get('/product/{slug}', [ProductsController::class, 'show']);
+Route::get('/products/search', [ProductsController::class, 'search']);
+Route::get('/products/search/result', [ProductsController::class, 'searchResult']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/category/{id}', [CategoryController::class, 'show']);
-Route::post('/category/create', [CategoryController::class, 'store']);
-Route::post('/category/delete/{id}', [CategoryController::class, 'destroy']);
+Route::get('/category/{slug}', [CategoryController::class, 'show']);
 
 Route::post('/checkout/guest', [CheckoutController::class, 'storeGuest']);

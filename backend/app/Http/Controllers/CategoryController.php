@@ -37,20 +37,20 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param string $slug
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(string $slug): JsonResponse
     {
-        return $this->categoryService->show($id);
+        return $this->categoryService->show($slug);
     }
 
     /**
-     * @param int $id
+     * @param string $slug
      * @return JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(string $slug): JsonResponse
     {
-        return $this->categoryService->delete($id);
+        return $this->categoryService->delete($slug);
     }
 }
